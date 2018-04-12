@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/relativeLayout1">
+    <TextView
+        android:text="Authentication"
+        android:textColor="#FFFFFF"
+        android:id="@+id/text"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="150dp"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="200dp"
+        android:background="#F8EFF8F3"
+        android:textColor="#333639"
+        android:textColorHint="#333639"
+        android:padding="16dp"
+        android:hint="Name" />
+    <EditText
+        android:id="@+id/password"
+        android:password="true"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_margin="15dp"
+        android:layout_below="@+id/name"
+        android:background="#F8EFF8F3"
+        android:textColor="#333639"
+        android:textColorHint="#333639"
+        android:padding="16dp"
+        android:hint="Password" />
+    <Button
+        android:id="@+id/login"
+        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:text="Log me In"
+        android:padding="15dp"
+        android:layout_marginTop="5dp" />
+</RelativeLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/relativeLayout1">
+    <Button
+        android:id="@+id/ButGenerator"
+        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:text="Generator"
+        android:padding="15dp"
+        android:layout_marginTop="-10dp" />
+    <Button
+        android:id="@+id/ButGetData"
+        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:text="Get my data"
+        android:padding="15dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="-10dp" />
+    <TextView
+        android:text="Choose the period"
+        android:textColor="#FFFFFF"
+        android:id="@+id/Title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <Spinner
+        android:padding="5dp"
+        android:entries="@array/dropDownArray"
+        android:backgroundTint="#D11F08"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Title"
+        android:id="@+id/Spinner" />
+    <Button
+        android:id="@+id/GetMyDataBtn"
+        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_below="@+id/Spinner"
+        android:layout_centerHorizontal="true"
+        android:text="Get my data"
+        android:padding="15dp"
+        android:layout_marginTop="5dp" />
+    <ListView
+        android:id="@+id/MyDataListView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="230dp" />
+</RelativeLayout>

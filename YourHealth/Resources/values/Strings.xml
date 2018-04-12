@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name">authTest</string>
+
+  <string-array name="dropDownArray">
+    <item>last hour</item>
+    <item>last 3 hours</item>
+    <item>last 6 hours</item>
+    <item>last 9 hours</item>
+    <item>last day</item>
+    <item>last 3 days</item>
+    <item>last week</item>
+    <item>last 2 weeks</item>
+  </string-array>
+</resources>
