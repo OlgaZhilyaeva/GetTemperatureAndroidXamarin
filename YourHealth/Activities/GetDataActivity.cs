@@ -29,6 +29,7 @@ namespace YourHealth.Activities
             base.OnCreate(savedInstanceState);
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.GetData);
+            Toast.MakeText(this, "hello", ToastLength.Long).Show();
 
             GetDataBtn = FindViewById<Button>(Resource.Id.ButGetData);
             GetDataBtn.Click += (object sender, EventArgs e) =>
@@ -58,13 +59,12 @@ namespace YourHealth.Activities
             GetMyDataBtn.Click += ButtonOnClick;
         }
 
-        private void ButtonOnClick(object sender, EventArgs eventArgs)
+        private async void ButtonOnClick(object sender, EventArgs eventArgs)
         {
-            var result = PostRequest("https://hlp-hospital-api.azurewebsites.net/api/temperatures").Result;
+            var result = await GetRequest("https://hlp-hospital-api.azurewebsites.net/api/temperatures");
             _temperatures.Clear();
             _temperatures.AddRange(GetAllTemperatures(result));
             DataListView.Adapter = new ArrayAdapter<Temperature>(this, Android.Resource.Layout.SimpleListItem1, _temperatures);
-
         }
 
         private IEnumerable<Temperature> GetAllTemperatures(string result)
@@ -117,7 +117,7 @@ namespace YourHealth.Activities
             return variableTime;
         }
 
-        async Task<string> PostRequest(string URL)
+        async Task<string> GetRequest(string URL)
         {
             var myHttpClient = new HttpClient();
             var response = await myHttpClient.GetAsync(URL);

@@ -10,7 +10,7 @@ namespace YourHealth.Models
 
         public override string ToString()
         {
-            var z = Value + DateTime.ToString();
+            var z = Value + " "+ DateTime;
             return z;
         }
     }

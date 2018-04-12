@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
@@ -13,7 +14,7 @@ using YourHealth.Models;
 namespace YourHealth.Activities
 {
     [Activity(Label = "Generator")]
-    class GeneratorActivity : Activity
+    public class GeneratorActivity : Activity
     {
         public TextView UserName { get; set; }
         public TextView TextChoice { get; set; }
@@ -23,7 +24,7 @@ namespace YourHealth.Activities
         public SeekBar SeekBar { get; set; }
         public ToggleButton ToggleButton { get; set; }
         private bool _state = false;
-        private int _z = 0;
+        private int _value = 0;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -51,14 +52,13 @@ namespace YourHealth.Activities
 
             SeekBar = FindViewById<SeekBar>(Resource.Id.seekBar);
             TextChoice = FindViewById<TextView>(Resource.Id.textChoice);
-
-            int value = 0;
+            
             SeekBar.ProgressChanged += (object sender, SeekBar.ProgressChangedEventArgs e) =>
             {
                 if (e.FromUser)
                 {
-                    value = e.Progress;
-                    TextChoice.Text = string.Format("The value is {0} ms", value);
+                    _value = e.Progress;
+                    TextChoice.Text = string.Format("The value is {0} s", _value);
                 }
             };
             //switchOn
@@ -75,19 +75,13 @@ namespace YourHealth.Activities
                 _state = true;
                 Task.Run(() =>
                 {
-                    Random rNum = new Random();
                     while (_state)
                     {
-                        _z++;
-                        double res = rNum.Next(360, 400) / 10.0;
-                        DateTime time = DateTime.UtcNow;
-                        TextResult.Post(() => { TextResult.Text = TextResult.Text.Insert(0, $"Value: {res:F}, Time: {time} \n"); });
-
                         string json = GetJson();
-                        var result = PostRequest("https://hlp-hospital-api.azurewebsites.net/api/temperatures",json);
+                        var messageError = "Your data doesn`t reach the Azure DB";
+                        var result = PostRequest("https://hlp-hospital-api.azurewebsites.net/api/temperatures",json, messageError);
                         
-
-                        Thread.Sleep(500);
+                        Thread.Sleep(_value*1000);
                     }
                 });
             }
@@ -99,25 +93,42 @@ namespace YourHealth.Activities
 
         private string GetJson()
         {
+            Random rNum = new Random();
+            decimal res = (rNum.Next(360, 400) / 10.0m);
+
             Temperature t = new Temperature()
             {
-                Value = 36,
+                Value = res,
                 DateTime = DateTime.UtcNow
             };
+
+            TextResult.Post(() =>
+            {
+                TextResult.Text = TextResult.Text.Insert(0, $"Value: {t.Value}, Time: {t.DateTime} \n");
+            });
 
             return JsonConvert.SerializeObject(t);
         }
 
-        async Task PostRequest(string URL, string json)
+        public bool PostRequest(string url, string json, string messageError)
         {
             var myHttpClient = new HttpClient();
-            var response = await myHttpClient.PostAsync(URL, new StringContent(json));
+            var response = myHttpClient.PostAsync(url, new StringContent(json, Encoding.UTF8, "application/json")).Result;
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                Toast.MakeText(this, "Your data doesn`t reach the Azure DB", ToastLength.Long).Show();
+                Toast.MakeText(this, messageError, ToastLength.Long).Show();
+                return false;
             }
-        }
 
+            var content = response.Content.ReadAsStringAsync().Result;
+
+            if (content != "true")
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
