@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -59,9 +57,12 @@ namespace YourHealth.Activities
             GetMyDataBtn.Click += ButtonOnClick;
         }
 
-        private async void ButtonOnClick(object sender, EventArgs eventArgs)
+        private void ButtonOnClick(object sender, EventArgs eventArgs)
         {
-            var result = await GetRequest("https://hlp-hospital-api.azurewebsites.net/api/temperatures");
+            var resultRaw = RestHttpClient.I.GetRequestRaw("https://hlp-hospital-api.azurewebsites.net/api/temperatures");
+
+            var result = resultRaw.HttpResponseMessage.Content.ReadAsStringAsync().Result;
+
             _temperatures.Clear();
             _temperatures.AddRange(GetAllTemperatures(result));
             DataListView.Adapter = new ArrayAdapter<Temperature>(this, Android.Resource.Layout.SimpleListItem1, _temperatures);
@@ -76,9 +77,6 @@ namespace YourHealth.Activities
 
         private void spinner_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
         {
-            //Spinner spinner = (Spinner)sender;
-            //string toast = string.Format("Your choice is {0}", spinner.GetItemAtPosition(e.Position));
-
             Time = DateTime.UtcNow;
             TimeLowBorder = GetDateLimits(e.Position,Time);
             Toast.MakeText(this, TimeLowBorder.ToString(), ToastLength.Long).Show();
@@ -116,16 +114,5 @@ namespace YourHealth.Activities
             }
             return variableTime;
         }
-
-        async Task<string> GetRequest(string URL)
-        {
-            var myHttpClient = new HttpClient();
-            var response = await myHttpClient.GetAsync(URL);
-            //var response1 = await myHttpClient.PostAsync(URL, new StringContent("JSON IS HERE"));
-
-            var json = await response.Content.ReadAsStringAsync();
-            return json;
-        }
-
     }
 }

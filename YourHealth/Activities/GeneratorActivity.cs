@@ -52,7 +52,7 @@ namespace YourHealth.Activities
 
             SeekBar = FindViewById<SeekBar>(Resource.Id.seekBar);
             TextChoice = FindViewById<TextView>(Resource.Id.textChoice);
-            
+
             SeekBar.ProgressChanged += (object sender, SeekBar.ProgressChangedEventArgs e) =>
             {
                 if (e.FromUser)
@@ -78,10 +78,15 @@ namespace YourHealth.Activities
                     while (_state)
                     {
                         string json = GetJson();
-                        var messageError = "Your data doesn`t reach the Azure DB";
-                        var result = PostRequest("https://hlp-hospital-api.azurewebsites.net/api/temperatures",json, messageError);
-                        
-                        Thread.Sleep(_value*1000);
+
+                        var response = RestHttpClient.I.PostRequestRaw("https://hlp-hospital-api.azurewebsites.net/api/temperatures",
+                            json);
+                        if (!response.HttpResponseMessage.IsSuccessStatusCode)
+                        {
+                            Logger.LogError(this, "Your data doesn`t reach the Azure DB");
+                        }
+
+                        Thread.Sleep(_value * 1000);
                     }
                 });
             }
